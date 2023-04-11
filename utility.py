@@ -15,7 +15,8 @@ def readFile(filename):
     n = int(raw[0])
     for i in range(1,n+1):
         name = raw[2*i-1].replace("\n","")
-        x, y = raw[2*i].split(" ")
+        y, x = raw[2*i].replace(",","").split(" ")
+        print(float(x), float(y))
 
         graph.add_node(name, pos=(float(x), float(y)))
 
@@ -34,6 +35,7 @@ def readFile(filename):
 
 def show(graph):
     coor = nx.get_node_attributes(graph, 'pos')
+    print(coor)
     nx.draw(graph, coor, with_labels=True)
     edge_labels = {(u, v): f"{w:.2f}" for u, v, w in graph.edges(data='weight')}
     nx.draw_networkx_edge_labels(graph, pos=coor, edge_labels=edge_labels)
@@ -109,7 +111,4 @@ def print_path(path):
 
 
 if __name__ == "__main__":
-    g = readFile("input.txt")
-    n1, n2 = input_destination(g)
-    path = astar.a_star(g, n1, n2)
-    show_path(g, path)
+    show(readFile("cisitu.txt"))

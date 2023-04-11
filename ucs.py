@@ -1,26 +1,27 @@
-from queue import PriorityQueue
+import queue
 
 def ucs(graph, start, goal):
-    prioQ = PriorityQueue()
-    prioQ.put(start, 0, [])
-    visited = []
+    prioQueue = queue.PriorityQueue()
+    prioQueue.put((0, start, [])) # cost = 0 , starting node, path = " "
+    visited = set()
 
-    while(prioQ.not_empty):
-        curretNode, cost, path = prioQ.get()
+    while not prioQueue.empty():
+        (totalCost, currentNode, path) = prioQueue.get() # Get the front of queue based on its weight
 
-        if curretNode in visited:
+        if currentNode in visited: #currentNode already visited, continue next iteration
             continue
 
-        path += curretNode
+        path += [currentNode]
 
-        if(curretNode == goal):
-            return cost, path
-        
-        visited.append(curretNode)
+        if currentNode == goal:
+            return path
 
-        for (nextNode, c) in graph[curretNode].items():
-            if(nextNode not in visited):
-                nextCost = cost + c
-                prioQ.put(nextNode, nextCost, path)
+        visited.add(currentNode)
+
+        for nextNode in graph.neighbors(currentNode): # Iterate for all neighbors from currentNode
+            tempCost = graph.get_edge_data(currentNode, nextNode)['weight']
+            if nextNode not in visited:
+                nextCost = totalCost + tempCost
+                prioQueue.put((nextCost, nextNode, path)) # Put next node according to its weight
 
     return None

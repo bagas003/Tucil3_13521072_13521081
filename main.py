@@ -6,7 +6,11 @@ while True:
     inp = 0
 
     filename = input("\nEnter file name:\n>> ")
-    graph = readFile(filename)
+    try:
+        graph = readFile(filename)
+    except ValueError:
+        print("There is something wrong with your input file!")
+        continue
 
     if input("\nShow graph? (Y/N):\n>> ").lower().find("y") != -1:
         show(graph)

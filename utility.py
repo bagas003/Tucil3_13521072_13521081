@@ -1,17 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import math
-import pyproj
-
-def latlon_to_utm(lat, lon):
-    # Define the UTM projection based on the longitude of the point
-    utm_zone = int((lon + 180) / 6) + 1  # Determine the UTM zone number
-    utm_proj = pyproj.Proj(proj='utm', zone=utm_zone, ellps='WGS84')
-
-    # Convert the latitude and longitude to UTM coordinates
-    easting, northing = utm_proj(lon, lat)
-
-    return easting, northing
 
 def dist(graph, node1, node2):
     return math.dist(graph.nodes[node1]['pos'], graph.nodes[node2]['pos'])

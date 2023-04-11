@@ -18,10 +18,13 @@ def ucs(graph, start, goal):
 
         visited.add(currentNode)
 
-        for nextNode in graph.neighbors(currentNode): # Iterate for all neighbors from currentNode
+        for nextNode in graph.neighbors(currentNode):
             tempCost = graph.get_edge_data(currentNode, nextNode)['weight']
             if nextNode not in visited:
                 nextCost = totalCost + tempCost
-                prioQueue.put((nextCost, nextNode, path)) # Put next node according to its weight
+                newPath = path.copy()  # make a copy of the current path before updating it
+                newPath += [currentNode]  # add the current node to the new path
+                prioQueue.put((nextCost, nextNode, newPath))
+
 
     return None

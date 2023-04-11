@@ -11,14 +11,25 @@ while True:
     except ValueError:
         print("There is something wrong with your input file!")
         continue
+    except FileNotFoundError:
+        print("No file .txt found, Please check your file name or its directory.")
+        continue
 
-    if input("\nShow graph? (Y/N):\n>> ").lower().find("y") != -1:
-        show(graph)
+    # if input("\nShow graph? (Y/N):\n>> ").lower().find("y") != -1:
+    #     show(graph)
 
     while True:
         start, goal = input_destination(graph)
 
-        path = ucs.ucs(graph, start, goal)
+        inputAlg = int(input("\n Choose your algorithm :\n1. UCS \n2. A* (A Star)\n>>"))
+
+        if(inputAlg == 1):
+            path = ucs.ucs(graph, start, goal)
+        elif (inputAlg == 2):
+            path = astar.a_star(graph, start, goal)
+        else:
+            print("Invalid input. Try again.")
+            continue
 
         print_path(path)
         if input("\nShow path? (Y/N):\n>> ").lower().find("y") != -1:

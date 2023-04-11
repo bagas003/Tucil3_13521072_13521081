@@ -6,6 +6,7 @@ def dist(graph, node1, node2):
     return math.dist(graph.nodes[node1]['pos'], graph.nodes[node2]['pos'])
 
 def readFile(filename):
+    filename = "test/" + filename
     f = open(filename.encode('unicode_escape').decode().replace("\"", ""), 'r')
     raw = f.readlines()
 
@@ -73,7 +74,7 @@ def input_destination(graph):
 
     while n1 == 0:
         temp = input("\nEnter starting point number.\nEnter 0 to show graph\n>> ")
-        if not temp.isnumeric() or int(temp) < 0 or int(temp) > len(nodes)+1:
+        if not temp.isnumeric() or int(temp) < 0 or int(temp) > len(nodes):
             print("Invalid input!")
             continue
 
@@ -84,7 +85,7 @@ def input_destination(graph):
     
     while n2 == 0:
         temp = input("\nEnter goal point number.\nEnter 0 to show graph\n>> ")
-        if not temp.isnumeric() or int(temp) < 0 or int(temp) > len(nodes)+1:
+        if not temp.isnumeric() or int(temp) < 0 or int(temp) > len(nodes):
             print("Invalid input!")
             continue
         

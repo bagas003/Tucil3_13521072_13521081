@@ -14,7 +14,6 @@ while True:
     while True:
         start, goal = input_destination(graph)
 
-        # path = astar.a_star(graph, start, goal)
         path = ucs.ucs(graph, start, goal)
 
         print_path(path)

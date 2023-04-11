@@ -1,7 +1,17 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import math
-import astar
+import pyproj
+
+def latlon_to_utm(lat, lon):
+    # Define the UTM projection based on the longitude of the point
+    utm_zone = int((lon + 180) / 6) + 1  # Determine the UTM zone number
+    utm_proj = pyproj.Proj(proj='utm', zone=utm_zone, ellps='WGS84')
+
+    # Convert the latitude and longitude to UTM coordinates
+    easting, northing = utm_proj(lon, lat)
+
+    return easting, northing
 
 def dist(graph, node1, node2):
     return math.dist(graph.nodes[node1]['pos'], graph.nodes[node2]['pos'])
@@ -15,10 +25,9 @@ def readFile(filename):
     n = int(raw[0])
     for i in range(1,n+1):
         name = raw[2*i-1].replace("\n","")
-        y, x = raw[2*i].replace(",","").split(" ")
-        print(float(x), float(y))
+        [y, x] = [float(i)*111139 for i in raw[2*i].replace(",","").split(" ")]
 
-        graph.add_node(name, pos=(float(x), float(y)))
+        graph.add_node(name, pos=(x, y))
 
     nodes = list(graph.nodes())
     
@@ -35,7 +44,6 @@ def readFile(filename):
 
 def show(graph):
     coor = nx.get_node_attributes(graph, 'pos')
-    print(coor)
     nx.draw(graph, coor, with_labels=True)
     edge_labels = {(u, v): f"{w:.2f}" for u, v, w in graph.edges(data='weight')}
     nx.draw_networkx_edge_labels(graph, pos=coor, edge_labels=edge_labels)

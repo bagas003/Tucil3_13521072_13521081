@@ -1,8 +1,7 @@
 import networkx as nx
 import math
 import folium
-import webbrowser
-import os
+import matplotlib.pyplot as plt
 import subprocess
 
 def dist(graph, node1, node2):
@@ -37,39 +36,13 @@ def readFile(filename):
     return graph
 
 
-def show(G):
-    xmax, ymax, xmin, ymin = 0, 0, 0, 0
-    for node in G.nodes():
-        [x, y] = [i for i in G.nodes()[node]['pos']]
-        if (xmax, ymax, xmin, ymin) == (0, 0, 0, 0):
-            xmax, ymax, xmin, ymin = x, y, x, y
-        if x > xmax: xmax = x
-        if x < xmin: xmin = x
-        if y > ymax: ymax = y
-        if y < ymin: ymin = y
-        
 
-    # Create a folium map
-    m = folium.Map(location=[(xmax + xmin)/2, (ymax + ymin)/2], zoom_start=17)
-    m.fit_bounds([[xmin, ymin], [xmax, ymax]])
-
-    for node in G.nodes():
-        [x, y] = [i for i in G.nodes()[node]['pos']]
-        folium.Marker(location=[x, y], popup=node).add_to(m)
-
-    routes = [[]]
-    for (node1, node2) in G.edges():
-        [x1, y1] = [i for i in G.nodes()[node1]['pos']]
-        [x2, y2] = [i for i in G.nodes()[node2]['pos']]
-        routes += [[(x1, y1), (x2, y2)]]
-    routes = routes[1:]
-
-    for route in routes:
-        folium.PolyLine(locations=route, color='orange', weight=5).add_to(m)
-
-    subprocess.run(["python"], "src/app.py")
-    m.save('src/map.html')
-    webbrowser.open('file://' + os.path.realpath('map.html'))
+def show(graph):
+    coor = nx.get_node_attributes(graph, 'pos')
+    nx.draw(graph, coor, with_labels=True)
+    edge_labels = {(u, v): f"{w:.2f}" for u, v, w in graph.edges(data='weight')}
+    nx.draw_networkx_edge_labels(graph, pos=coor, edge_labels=edge_labels)
+    plt.show()
 
 
 

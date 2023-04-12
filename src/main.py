@@ -23,7 +23,7 @@ while True:
         start, goal = input_destination(graph)
         while True:
             try:
-                inputAlg = int(input("\n Choose your algorithm :\n1. UCS \n2. A* (A Star)\n>>"))
+                inputAlg = int(input("\n Choose your algorithm :\n1. UCS \n2. A* (A Star)\n>> "))
             except ValueError:
                 print("Invalid input. Try again.")
                 continue

@@ -1,5 +1,4 @@
 import networkx as nx
-import matplotlib.pyplot as plt
 import math
 import folium
 import webbrowser
@@ -169,10 +168,5 @@ def get_total_dist(graph, path):
 
 
 if __name__ == "__main__":
-    # create a graph
     g = readFile('sukoharjo.txt')
-    # pos = nx.get_node_attributes(G, 'pos')
-    # nx.draw(G, pos)
-    # nx.draw_networkx_labels(G, pos)
-    # plt.show()
     show(g)

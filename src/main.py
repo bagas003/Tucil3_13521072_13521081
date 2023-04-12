@@ -47,4 +47,5 @@ while True:
             break
 
     if inp == 3:
+        print("Goodbye.")
         break

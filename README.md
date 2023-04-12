@@ -1,6 +1,8 @@
 # IF2211 Algorithm Strategies Mini Project
 Shortest Path Finder Using UCS and A* Algorithm
 
+![screenshot](doc/screenshot.jpg)
+
 ## Prerequisite
 - Python 3.X
 - flask, folium, networkx

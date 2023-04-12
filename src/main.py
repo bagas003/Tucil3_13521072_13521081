@@ -21,20 +21,26 @@ while True:
 
     while True:
         start, goal = input_destination(graph)
+        while True:
+            try:
+                inputAlg = int(input("\n Choose your algorithm :\n1. UCS \n2. A* (A Star)\n>>"))
+            except ValueError:
+                print("Invalid input. Try again.")
+                continue
 
-        inputAlg = int(input("\n Choose your algorithm :\n1. UCS \n2. A* (A Star)\n>>"))
-
-        if(inputAlg == 1):
-            path = ucs.ucs(graph, start, goal)
-        elif (inputAlg == 2):
-            path = astar.a_star(graph, start, goal)
-        else:
-            print("Invalid input. Try again.")
-            continue
+            if(inputAlg == 1):
+                path = ucs.ucs(graph, start, goal)
+                break
+            elif (inputAlg == 2):
+                path = astar.a_star(graph, start, goal)
+                break
+            else:
+                print("Invalid input. Try again.")
+                continue
 
         print_path(path)
         print(f"Shortest path distance: {get_total_dist(graph, path):.2f} m")
-        if input("\nShow path? (Y/N):\n>> ").lower().find("y") != -1:
+        if input("Visualize path? : (You'll need to re-run the program if you visualize its path)\n1. Y/y, for visualize, \n2. Click any button, for continue\n>> ").lower().find("y") != -1:
             show_path(graph, path)
         
         temp = input("\nContinue?\n1. Continue with the same graph\n2. Continue with different graph\n3. Quit\n>> ")

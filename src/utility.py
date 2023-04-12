@@ -1,9 +1,14 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import math
+import folium
+import webbrowser
+import os
 
 def dist(graph, node1, node2):
-    return math.dist(graph.nodes[node1]['pos'], graph.nodes[node2]['pos'])
+    x = graph.nodes[node1]['pos']
+    y = graph.nodes[node2]['pos']
+    return math.dist(x, y)*111139
 
 def readFile(filename):
     filename = "test/" + filename
@@ -15,7 +20,7 @@ def readFile(filename):
     n = int(raw[0])
     for i in range(1,n+1):
         name = raw[2*i-1].replace("\n","")
-        [y, x] = [float(i)*111139 for i in raw[2*i].replace(",","").split(" ")]
+        [x, y] = [float(i) for i in raw[2*i].replace(",","").split(" ")]
 
         graph.add_node(name, pos=(x, y))
 
@@ -32,31 +37,79 @@ def readFile(filename):
     return graph
 
 
-def show(graph):
-    coor = nx.get_node_attributes(graph, 'pos')
-    nx.draw(graph, coor, with_labels=True)
-    edge_labels = {(u, v): f"{w:.2f}" for u, v, w in graph.edges(data='weight')}
-    nx.draw_networkx_edge_labels(graph, pos=coor, edge_labels=edge_labels)
-    plt.grid()
-    plt.show()
+def show(G):
+    xmax, ymax, xmin, ymin = 0, 0, 0, 0
+    for node in G.nodes():
+        [x, y] = [i for i in G.nodes()[node]['pos']]
+        if (xmax, ymax, xmin, ymin) == (0, 0, 0, 0):
+            xmax, ymax, xmin, ymin = x, y, x, y
+        if x > xmax: xmax = x
+        if x < xmin: xmin = x
+        if y > ymax: ymax = y
+        if y < ymin: ymin = y
+        
+
+    # Create a folium map
+    m = folium.Map(location=[(xmax + xmin)/2, (ymax + ymin)/2], zoom_start=17)
+    m.fit_bounds([[xmin, ymin], [xmax, ymax]])
+
+    for node in G.nodes():
+        [x, y] = [i for i in G.nodes()[node]['pos']]
+        folium.Marker(location=[x, y], popup=node).add_to(m)
+
+    routes = [[]]
+    for (node1, node2) in G.edges():
+        [x1, y1] = [i for i in G.nodes()[node1]['pos']]
+        [x2, y2] = [i for i in G.nodes()[node2]['pos']]
+        routes += [[(x1, y1), (x2, y2)]]
+    routes = routes[1:]
+
+    for route in routes:
+        folium.PolyLine(locations=route, color='yellow', weight=5).add_to(m)
+
+    m.save('src/map.html')
+    webbrowser.open('file://' + os.path.realpath('map.html'))
 
 
-def show_path(graph, path):
-    coor = nx.get_node_attributes(graph, 'pos')
 
-    path_graph = nx.Graph()
-    path_graph.add_node(path[0], pos=coor[path[0]])
-    for i in range(1,len(path)):
-        path_graph.add_node(path[i], pos=coor[path[i]])
-        path_graph.add_edge(path[i-1], path[i], weight=dist(graph, path[i-1], path[i]))
+def show_path(G, path):
+    xmax, ymax, xmin, ymin = 0, 0, 0, 0
+    for node in G.nodes():
+        [x, y] = [i for i in G.nodes()[node]['pos']]
+        if (xmax, ymax, xmin, ymin) == (0, 0, 0, 0):
+            xmax, ymax, xmin, ymin = x, y, x, y
+        if x > xmax: xmax = x
+        if x < xmin: xmin = x
+        if y > ymax: ymax = y
+        if y < ymin: ymin = y
+        
 
-    path_coor = nx.get_node_attributes(path_graph, 'pos')
+    # Create a folium map
+    m = folium.Map(location=[(xmax + xmin)/2, (ymax + ymin)/2], zoom_start=17)
 
-    nx.draw(graph, coor, with_labels=True)
-    nx.draw(path_graph, path_coor, edge_color='red', node_color='red')
-    edge_labels = {(u, v): f"{w:.2f}" for u, v, w in graph.edges(data='weight')}
-    nx.draw_networkx_edge_labels(graph, pos=coor, edge_labels=edge_labels)
-    plt.show()
+    for node in G.nodes():
+        [x, y] = [i for i in G.nodes()[node]['pos']]
+        folium.Marker(location=[x, y], popup=node).add_to(m)
+
+    routes = [[]]
+    for (node1, node2) in G.edges():
+        [x1, y1] = [i for i in G.nodes()[node1]['pos']]
+        [x2, y2] = [i for i in G.nodes()[node2]['pos']]
+        routes += [[(x1, y1), (x2, y2)]]
+    routes = routes[1:]
+
+    for route in routes:
+        folium.PolyLine(locations=route, color='yellow', weight=5).add_to(m)
+
+    path_route = []
+    for p in path:
+        [x, y] = [i for i in G.nodes()[p]['pos']]
+        path_route += [(x, y)]
+
+    folium.PolyLine(locations=path_route, color='red', weight=5).add_to(m)
+
+    m.save('src/map.html')
+    webbrowser.open('file://' + os.path.realpath('map.html'))
 
 
 def input_destination(graph):
@@ -117,18 +170,9 @@ def get_total_dist(graph, path):
 
 if __name__ == "__main__":
     # create a graph
-    G = nx.Graph()
-    G.add_edges_from([(1, 2), (2, 3), (3, 1)])
-
-    # draw the graph
-    pos = nx.spring_layout(G)
-    nx.draw(G, pos)
-
-    # draw grid lines
-    plt.grid(True, linestyle='-', color='0.75', linewidth=1)
-
-    # set the drawing order of the grid lines
-    plt.gca().set_axisbelow(True)
-
-    # show the plot
-    plt.show()
+    g = readFile('sukoharjo.txt')
+    # pos = nx.get_node_attributes(G, 'pos')
+    # nx.draw(G, pos)
+    # nx.draw_networkx_labels(G, pos)
+    # plt.show()
+    show(g)

@@ -3,6 +3,7 @@ import math
 import folium
 import webbrowser
 import os
+import subprocess
 
 def dist(graph, node1, node2):
     x = graph.nodes[node1]['pos']
@@ -64,8 +65,9 @@ def show(G):
     routes = routes[1:]
 
     for route in routes:
-        folium.PolyLine(locations=route, color='yellow', weight=5).add_to(m)
+        folium.PolyLine(locations=route, color='orange', weight=5).add_to(m)
 
+    subprocess.run(["python"], "src/app.py")
     m.save('src/map.html')
     webbrowser.open('file://' + os.path.realpath('map.html'))
 
@@ -98,7 +100,7 @@ def show_path(G, path):
     routes = routes[1:]
 
     for route in routes:
-        folium.PolyLine(locations=route, color='yellow', weight=5).add_to(m)
+        folium.PolyLine(locations=route, color='orange', weight=5).add_to(m)
 
     path_route = []
     for p in path:
@@ -107,8 +109,10 @@ def show_path(G, path):
 
     folium.PolyLine(locations=path_route, color='red', weight=5).add_to(m)
 
-    m.save('src/map.html')
-    webbrowser.open('file://' + os.path.realpath('map.html'))
+    m.save('src/templates/map.html')
+    subprocess.run(["python", "src/app.py"])
+    # webbrowser.open('file://' + os.path.realpath('map.html'), new=2, autoraise=False)
+    
 
 
 def input_destination(graph):

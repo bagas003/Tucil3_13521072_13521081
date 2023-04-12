@@ -40,7 +40,7 @@ while True:
 
         print_path(path)
         print(f"Shortest path distance: {get_total_dist(graph, path):.2f} m")
-        if input("Visualize path? : (You'll need to re-run the program if you visualize its path)\n1. Y/y, for visualize, \n2. Click any button, for continue\n>> ").lower().find("y") != -1:
+        if input("Visualize path? : (You'll need to re-run the program if you visualize its path)\n- Y/y, for visualize, \n- Click any button, for continue\n>> ").lower().find("y") != -1:
             show_path(graph, path)
         
         temp = input("\nContinue?\n1. Continue with the same graph\n2. Continue with different graph\n3. Quit\n>> ")

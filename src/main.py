@@ -14,6 +14,9 @@ while True:
     except FileNotFoundError:
         print("No file .txt found, Please check your file name or its directory.")
         continue
+    except IsADirectoryError:
+        print(("Please enter your file name!"))
+        continue
 
     # if input("\nShow graph? (Y/N):\n>> ").lower().find("y") != -1:
     #     show(graph)

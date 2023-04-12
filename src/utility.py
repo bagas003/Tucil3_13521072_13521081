@@ -37,6 +37,7 @@ def show(graph):
     nx.draw(graph, coor, with_labels=True)
     edge_labels = {(u, v): f"{w:.2f}" for u, v, w in graph.edges(data='weight')}
     nx.draw_networkx_edge_labels(graph, pos=coor, edge_labels=edge_labels)
+    plt.grid()
     plt.show()
 
 
@@ -56,7 +57,6 @@ def show_path(graph, path):
     edge_labels = {(u, v): f"{w:.2f}" for u, v, w in graph.edges(data='weight')}
     nx.draw_networkx_edge_labels(graph, pos=coor, edge_labels=edge_labels)
     plt.show()
-
 
 
 def input_destination(graph):
@@ -104,9 +104,31 @@ def print_path(path):
     else:
         print('None')
     print()
+
+
+def get_total_dist(graph, path):
+    d = 0
+    for i in range(1,len(path)):
+        d += graph.get_edge_data(path[i-1],path[i])['weight']
+    return d
             
 
 
 
 if __name__ == "__main__":
-    show(readFile("cisitu.txt"))
+    # create a graph
+    G = nx.Graph()
+    G.add_edges_from([(1, 2), (2, 3), (3, 1)])
+
+    # draw the graph
+    pos = nx.spring_layout(G)
+    nx.draw(G, pos)
+
+    # draw grid lines
+    plt.grid(True, linestyle='-', color='0.75', linewidth=1)
+
+    # set the drawing order of the grid lines
+    plt.gca().set_axisbelow(True)
+
+    # show the plot
+    plt.show()

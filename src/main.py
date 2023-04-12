@@ -18,8 +18,6 @@ while True:
         print(("Please enter your file name!"))
         continue
 
-    # if input("\nShow graph? (Y/N):\n>> ").lower().find("y") != -1:
-    #     show(graph)
 
     while True:
         start, goal = input_destination(graph)
@@ -35,6 +33,7 @@ while True:
             continue
 
         print_path(path)
+        print(f"Shortest path distance: {get_total_dist(graph, path):.2f} m")
         if input("\nShow path? (Y/N):\n>> ").lower().find("y") != -1:
             show_path(graph, path)
         
